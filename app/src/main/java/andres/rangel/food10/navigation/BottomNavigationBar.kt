@@ -1,0 +1,63 @@
+package andres.rangel.food10.navigation
+
+import andres.rangel.food10.R
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+
+@Composable
+fun BottomNavigationBar(navController: NavController, items: List<AppScreens>) {
+    BottomNavigation(
+        backgroundColor = Color.White
+    ) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        items.forEach { screen ->
+            BottomNavigationItem(
+                icon = {
+                    when (screen.route) {
+                        "home_screen" -> Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(id = R.drawable.home),
+                            contentDescription = "Home"
+                        )
+                        "bookmarks_screen" -> Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(id = R.drawable.bookmarks),
+                            contentDescription = "Bookmarks"
+                        )
+                        "profile_screen" -> Icon(
+                            modifier = Modifier.size(25.dp),
+                            painter = painterResource(id = R.drawable.profileicon),
+                            contentDescription = "Profile"
+                        )
+                    }
+                },
+                label = {
+                    when (screen.route) {
+                        "home_screen" -> Text(text = "Inicio")
+                        "bookmarks_screen" -> Text(text = "Favoritos")
+                        "profile_screen" -> Text(text = "Perfil")
+                    }
+                },
+                selected = currentRoute == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+    }
+}
